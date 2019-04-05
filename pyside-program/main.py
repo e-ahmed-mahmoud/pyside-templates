@@ -44,6 +44,7 @@ class MainGUI(MainWindowTemplate):
         {"Menu head 1": ["Menu item under 1"], "Menu head 2": ["Menu item under 2"]}
         {"Menu head": ["Menu item 1", "Menu item 2"]}
         {"Menu head": [{"Menu item 1: ["Menu subitem 1", "Menu subitem 2"]}, "Menu item 2"]}
+        For a line between menu items, specify five dashes, e.g. {"Menu head": ["Menu item 1", "-----", "Menu item 2"]}
         """
 
         self.menu_list = {"File": ["Close"]}
