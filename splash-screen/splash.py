@@ -50,7 +50,7 @@ class Splash(QSplashScreen):
         self.layout.addWidget(self.bar)
 
         # Message
-        self.message_display = QLabel(text="Loading...")  # Changing message as desired
+        self.message_display = QLabel(text="Loading...")  # Change message as desired
         self.layout.addWidget(self.message_display)
 
         self.centre_on_screen()
