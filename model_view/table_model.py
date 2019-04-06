@@ -13,9 +13,7 @@ class Table:
     def __init__(self, name, parent=None, columns=[], data=[[]], info=None):
         self.name = name
         self.parent = parent
-        columns_to_model = columns
-        data_to_model = dataset
-        self.model = TableModel(columns_to_model, data_to_model, info)
+        self.model = TableModel(columns, data, info)
         self.proxy_model = ProxyModel(self.model)
         self.tables = {}
 
@@ -87,14 +85,19 @@ class ProxyModel(QSortFilterProxyModel):
     def __init__(self, model):
         super().__init__()
         self.setSourceModel(model)
-        self.filter_conditions = {"Remove": []}
+        self.filtering_rows = []
+        self.remove_rows = []
 
     def filterAcceptsRow(self, source_row, source_parent):
-        if source_row in self.filter_conditions["Remove"]:
+        """
+        Filters out rows that are in either self.filtering_rows or self.remove_rows
+        Use self.filtering_rows to specify rows excluded based on filter criteria and self.remove_rows to exclude
+        rows that have been manually removed (e.g. in a context menu)
+        
+        Specify rows in self.filtering_rows and self.remove_rows then call {ProxyModelInstance}.setFilterFixedString("")
+        This method can be redefined to filter in any way, as long as it returns a bool for each source_row
+        """
+        
+        if source_row in self.filtering_rows or source_row in self.remove_rows:
             return False
-        
-        # Add any necessary filtering operations here. You can add items to self.filter_conditions before filtering
-        # and then call upon that to control filtering here. Return False for every row to be excluded, the True at
-        # the end of the method will return all remaining rows.
-        
         return True
