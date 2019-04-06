@@ -13,9 +13,7 @@ class Table:
     def __init__(self, name, parent=None, columns=[], data=[[]], info=None):
         self.name = name
         self.parent = parent
-        columns_to_model = columns
-        data_to_model = dataset
-        self.model = TableModel(columns_to_model, data_to_model, info)
+        self.model = TableModel(columns, data, info)
         self.proxy_model = ProxyModel(self.model)
         self.tables = {}
 
@@ -100,6 +98,6 @@ class ProxyModel(QSortFilterProxyModel):
         This method can be redefined to filter in any way, as long as it returns a bool for each source_row
         """
         
-        if source_row in self.filterings_rows or source_row in self.remove_rows:
+        if source_row in self.filtering_rows or source_row in self.remove_rows:
             return False
         return True
