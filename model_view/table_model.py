@@ -10,11 +10,11 @@ from PySide2.QtCore import QAbstractTableModel, Qt, QSortFilterProxyModel
 
 
 class Table:
-    def __init__(self, name, parent=None, pandas=None, columns=[], data=[[]], info=None):
+    def __init__(self, name, parent=None, columns=[], data=[[]], info=None):
         self.name = name
         self.parent = parent
-        columns_to_model = self.columns_from_pandas(pandas) if pandas else columns
-        data_to_model = self.data_from_pandas(pandas) if pandas else dataset
+        columns_to_model = columns
+        data_to_model = dataset
         self.model = TableModel(columns_to_model, data_to_model, info)
         self.proxy_model = ProxyModel(self.model)
         self.tables = {}
@@ -87,6 +87,14 @@ class ProxyModel(QSortFilterProxyModel):
     def __init__(self, model):
         super().__init__()
         self.setSourceModel(model)
+        self.filter_conditions = {"Remove": []}
 
     def filterAcceptsRow(self, source_row, source_parent):
+        if source_row in self.filter_conditions["Remove"]:
+            return False
+        
+        # Add any necessary filtering operations here. You can add items to self.filter_conditions before filtering
+        # and then call upon that to control filtering here. Return False for every row to be excluded, the True at
+        # the end of the method will return all remaining rows.
+        
         return True
