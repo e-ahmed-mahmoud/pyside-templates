@@ -1,3 +1,6 @@
+from PySide2.QtWidgets import QTableView
+
+
 class TableView(QTableView):
     def __init__(self, parent, name, model, columns_to_include=[], rotated=False, stretch=False):
         super().__init__()
@@ -18,9 +21,9 @@ class TableView(QTableView):
                 if column not in columns_to_include:
                     self.setColumnHidden(i, True)
                     
-    def show_all_columns():
+    def show_all_columns(self):
         """Call this before calling set_columns to change the visible columns"""
-        for i in range(len(self.model.sourceModel().columns):
+        for i in range(len(self.model.sourceModel().columns)):
             self.setColumnHidden(i, False)
     
     def set_widths(self):
