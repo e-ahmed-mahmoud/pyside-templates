@@ -1,4 +1,7 @@
-from PySide2.QtWidgets import QTableView
+import sys
+from PySide2.QtWidgets import QTableView, QSizePolicy, QAbstractItemView, QMenu, QHeaderView
+from PySide2.QtCore import Qt, QRect
+from PySide2.QtGui import QColor
 
 
 class TableView(QTableView):
