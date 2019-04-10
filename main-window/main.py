@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         :object_name: str; Name of main window object
         """
 
-        QMainWindow.__init__(self)
+        super().__init__()
         self.setObjectName(object_name)
         self.screen = QDesktopWidget().availableGeometry()
         self.setup_template(title)
