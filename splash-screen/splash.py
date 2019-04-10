@@ -11,7 +11,7 @@ class Splash(QSplashScreen):
         :width: int, specified width for splash screen
         :height: in, specified height for splash screen
         """
-        super().__init__(self)
+        super().__init__()
         self.width, self.height = width, height
         self.setFixedSize(self.width, self.height)
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
