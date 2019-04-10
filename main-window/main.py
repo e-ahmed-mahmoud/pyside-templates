@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         self.screen = QDesktopWidget().availableGeometry()
         self.setup_template(title)
         if icon:
-            self.setWindowIcon(QIcon(""))
+            self.setWindowIcon(QIcon(icon))
         self.menu_list = self.menu()
         self.menu_bar = QMenuBar(self)
         self.menu_heads = {}
