@@ -3,7 +3,7 @@
 
 
 from PySide2.QtWidgets import QMainWindow, QDesktopWidget, QMenuBar, QMenu, QAction, QStatusBar
-from PySide2.QtCore import QMetaObject, QCoreApplication
+from PySide2.QtCore import QCoreApplication
 from PySide2.QtGui import QIcon
 
 
