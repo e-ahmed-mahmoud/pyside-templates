@@ -63,6 +63,17 @@ class TableView(QTableView):
             width = self.model.sourceModel().info[column]["Width"]
             self.setColumnWidth(i, width)
 
+    def set_visible_columns(self, columns_to_include=[]):
+        """
+        Hides columns so that only those specified in the columns_to_include list are shown
+        
+        :param columns_to_include: list of str, items must be column names as defined in the underlying TableModel
+        """
+        
+        for i, column in enumerate(self.model.sourceModel().columns):
+            hide = column not in columns_to_include
+            self.setColumnHidden(i, hide)
+    
     def fit_rows(self):
         """Adjusts row heights to fit all data"""
 
