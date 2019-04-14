@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 #   table_view.py
-#   Examples of table model subclasses for use in PySide2 applications
+#   Example of table view subclass for use with a ProxyModel
 #   Using Python 3.6 and PySide2 v.5.12
 #
 #   Copyright (C) 2019 Robert Parker
