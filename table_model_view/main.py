@@ -20,8 +20,9 @@
 #   along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
-from PySide2.QtWidgets import QFrame, QVBoxLayout, QTableView
-from table_models import TableModel
+from PySide2.QtWidgets import QFrame, QVBoxLayout, QComboBox, QPushButton
+from table_models import TableModel, ProxyModel
+from table_view import TableView
 
 
 class MainFrame(QFrame):
@@ -39,10 +40,25 @@ class MainFrame(QFrame):
                 "number1": {"Type": "int", "Label": "Number 1", "Alignment": "center", "Width": 80},
                 "number2": {"Type": "int", "Label": "Number 2", "Alignment": "center", "Width": 80}}
         self.table_model = TableModel(columns, data, info)
-        self.table_view = QTableView()
-        self.table_view.setModel(self.table_model)
-        self.setup()
+        self.proxy_model = ProxyModel(self.table_model)
+        self.table_view = TableView(self, self.proxy_model, "My table")
+        self.filter_combo = QComboBox()
+        self.reset_button = QPushButton("Reset filters")
+        self.setup(data)
+        self.filter_combo.currentTextChanged.connect(self.apply_filter)
+        self.reset_button.clicked.connect(self.proxy_model.reset_filters)
 
-    def setup(self):
+    def apply_filter(self):
+        name = self.filter_combo.currentText()
+        self.proxy_model.add_filter_condition("name", name)
+
+    def setup(self, data):
+        self.setFixedWidth(400)
         layout = QVBoxLayout(self)
         layout.addWidget(self.table_view)
+        layout.addWidget(self.filter_combo)
+        layout.addWidget(self.reset_button)
+
+        names_list = []
+        [names_list.append(row[0]) for row in data if row[0] not in names_list]
+        self.filter_combo.addItems(names_list)
