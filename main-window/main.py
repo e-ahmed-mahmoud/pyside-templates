@@ -26,16 +26,14 @@ from PySide2.QtGui import QIcon
 
 
 class MainWindow(QMainWindow):
-    """
-    Template for main window that sets window size and placement, creates menu and status bars, and handles menu
-    signals.
-    """
-
     def __init__(self, title="", icon="", object_name="MainWindow"):
         """
-        :title: str; Name to be displayed at the top of the window
-        :icon: str; file path to icon image file
-        :object_name: str; Name of main window object
+        Template for main window that sets window size and placement, creates menu and status bars, and handles menu
+        signals.
+    
+        :param title: str; Name to be displayed at the top of the window
+        :param icon: str; file path to icon image file
+        :param object_name: str; Name of main window object
         """
 
         super().__init__()
@@ -76,9 +74,11 @@ class MainWindow(QMainWindow):
 
     def menu_operations(self, head, item, subitem=None):
         """
-        Re-implement this function to define menu operations
-
-        Defines what happens when each menu item is selected
+        Re-implement this function to define what happens when each menu item is selected.
+        
+        :param head: str, menu head name as defined in self.menu()
+        :param item: str, menu item name as defined in self.menu()
+        :param head: str, menu subitem name, if applicable, as defined in self.menu()
         """
 
         if head == "File":
@@ -86,11 +86,15 @@ class MainWindow(QMainWindow):
                 self.close()
 
     def setup_template(self, title):
+        """Sets up window size and title"""
+        
         self.resize(self.screen.width() - 150, self.screen.height() - 150)  # Sets window size 150 px from screen edge
         self.centre_on_screen()
         self.setWindowTitle(title)
 
     def centre_on_screen(self):
+        """Centers the screen on the desktop"""
+        
         centre = self.screen.center()
         x, y = centre.x() - self.size().width() / 2, centre.y() - self.size().height() / 2
         x = 0 if x < 0 else x
@@ -109,7 +113,7 @@ class MainWindow(QMainWindow):
                     widget.triggered.connect(self.menu_connections(head, item))
 
     def menu_connections(self, head, item, subitem=None):
-        """Redirects menu signals to the menu_operations function in the main window class"""
+        """Redirects menu signals to the menu_operations function in the main window class. Leave this."""
         return lambda: self.menu_operations(head, item, subitem)
 
     def setup_menu(self, object_name):
