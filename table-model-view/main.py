@@ -83,4 +83,4 @@ class MainFrame(QFrame):
         [names_list.append(row[0]) for row in data if row[0] not in names_list]
         self.filter_combo.addItem("Select name")
         self.filter_combo.addItems(names_list)
-        self.filter.setCurrentText("Select name")
+        self.filter_combo.setCurrentText("Select name")
