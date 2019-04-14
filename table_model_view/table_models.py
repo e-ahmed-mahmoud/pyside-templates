@@ -155,4 +155,34 @@ class ProxyModel(QSortFilterProxyModel):
 
         if source_row in self.filter_conditions["Remove"]:
             return False
+        for column, conditions in self.filter_conditions.items():
+            if column == "Remove":
+                if source_row in conditions:
+                    return False
+            for i, column_name in enumerate(self.sourceModel().columns):
+                if column_name == column:
+                    if self.sourceModel().dataset[source_row][i] not in conditions:
+                        return False
         return True
+
+    def add_filter_condition(self, column_name, conditions):
+        """
+        Specifies a list of values for a specified column which are to be included in a filtered table. This replaces
+        any previous filter on the same column but does not reset any other filters. Use reset_filters() to reset all
+        filters. Reimplement this function if you want more complicated methods of determining filter conditions, for
+        example if you want to add a value to the already-existing list of conditions for a given column rather than
+        replacing the conditions list entirely, or if you want to specify to exclude specified values instead of
+        including them.
+
+        :param column_name: str, name of column, must be included in the columns list of the source model
+        :param conditions: list of values to be included a filter of the specified column
+        """
+
+        self.filter_conditions[column_name] = conditions
+        self.setFilterFixedString("")
+
+    def reset_filters(self):
+        """Removes all filter conditions and returns the table to its original unfiltered state"""
+
+        self.filter_conditions = {"Remove": []}
+        self.setFilterFixedString("")
