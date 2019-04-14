@@ -67,7 +67,8 @@ class MainFrame(QFrame):
         """Simple method to read the example combo box and filter the proxy model by the selected name"""
 
         name = self.filter_combo.currentText()
-        self.proxy_model.add_filter_condition("name", name)
+        if name != "Select name":
+            self.proxy_model.add_filter_condition("name", name)
 
     def setup(self, data):
         """Setup layout and populate the filter combo box"""
@@ -80,4 +81,6 @@ class MainFrame(QFrame):
 
         names_list = []
         [names_list.append(row[0]) for row in data if row[0] not in names_list]
+        self.filter_combo.addItem("Select name")
         self.filter_combo.addItems(names_list)
+        self.filter.setCurrentText("Select name")
