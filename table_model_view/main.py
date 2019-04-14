@@ -21,8 +21,10 @@
 
 
 from PySide2.QtWidgets import QFrame, QVBoxLayout, QComboBox, QPushButton
+from PySide2.QtGui import QColor
 from table_models import TableModel, ProxyModel
 from table_view import TableView
+from delegates import FillColorDelegate
 
 
 class MainFrame(QFrame):
@@ -34,11 +36,13 @@ class MainFrame(QFrame):
         """
 
         super().__init__()
-        columns = ["name", "number1", "number2"]
-        data = [["David", 4, 6], ["David", 5, 2], ["Sarah", 0, 2], ["Evan", 9, 1], ["Leah", 6, 4]]
+        columns = ["name", "number1", "number2", "highscore"]
+        data = [["David", 4, 6, True], ["David", 5, 2, False], ["Sarah", 0, 2, False], ["Evan", 9, 1, True],
+                ["Leah", 6, 4, True]]
         info = {"name": {"Type": "str", "Label": "Name", "Alignment": "left", "Width": 120},
                 "number1": {"Type": "int", "Label": "Number 1", "Alignment": "center", "Width": 80},
-                "number2": {"Type": "int", "Label": "Number 2", "Alignment": "center", "Width": 80}}
+                "number2": {"Type": "int", "Label": "Number 2", "Alignment": "center", "Width": 80},
+                "highscore": {"Type": "bool", "Label": "High score?", "Alignment": "center", "Width": 80}}
         self.table_model = TableModel(columns, data, info)
         self.proxy_model = ProxyModel(self.table_model)
         self.table_view = TableView(self, self.proxy_model, "My table")
@@ -47,12 +51,27 @@ class MainFrame(QFrame):
         self.setup(data)
         self.filter_combo.currentTextChanged.connect(self.apply_filter)
         self.reset_button.clicked.connect(self.proxy_model.reset_filters)
+        self.delegates = {}
+        self.setup_delegates()
+
+    def setup_delegates(self):
+        """Store delegates in self.delegates dictionary by column name and apply delegates to table view"""
+
+        self.delegates["highscore"] = FillColorDelegate(self.proxy_model, QColor(0, 0, 255))
+        for column_name, delegate in self.delegates.items():
+            for i, column in enumerate(self.table_model.columns):
+                if column == column_name:
+                    self.table_view.setItemDelegateForColumn(i, delegate)
 
     def apply_filter(self):
+        """Simple method to read the example combo box and filter the proxy model by the selected name"""
+
         name = self.filter_combo.currentText()
         self.proxy_model.add_filter_condition("name", name)
 
     def setup(self, data):
+        """Setup layout and populate the filter combo box"""
+
         self.setFixedWidth(400)
         layout = QVBoxLayout(self)
         layout.addWidget(self.table_view)
