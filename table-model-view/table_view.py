@@ -20,7 +20,9 @@
 #   along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
-from PySide2.QtWidgets import QTableView, QAbstractItemView, QSizePolicy, QMenu
+import io
+import csv
+from PySide2.QtWidgets import QTableView, QAbstractItemView, QSizePolicy, QMenu, qApp
 
 
 class TableView(QTableView):
@@ -95,9 +97,35 @@ class TableView(QTableView):
         row = self.model.mapToSource(index).row()
         context_menu = QMenu(self)
         menu_items = {}
-        for item in ["Remove"]:  # Build menu first
+        for item in ["Copy", "Remove"]:  # Build menu first
             menu_items[item] = context_menu.addAction(item)
         selection = context_menu.exec_(event.globalPos())  # Identify the selected item
-        if selection == menu_items["Remove"]:  # Specify what happens for each item
+        if selection == menu_items["Copy"]:  # Specify what happens for each item
+            self.copy_selection()
+        elif selection == menu_items["Remove"]:
             self.model.filter_conditions["Remove"].append(row)
             self.model.setFilterFixedString("")
+
+    def copy_selection(self):
+        """
+        This function copies the selected cells in a table view, accounting for filters and rows as well as
+        non-continuous selection ranges. The format of copied values can be pasted into Excel retaining the
+        original organization.
+        
+        Adapted from code provided by ekhumoro on StackOverflow 
+        """
+        
+        selection = self.selectedIndexes()
+        if selection:
+            rows = [index.row() for index in selection]
+            columns = [index.column() for index in selection]
+            row_count = max(rows) - min(rows) + 1
+            col_count = max(columns) - min(columns) + 1
+            table = [[""] * col_count for _ in range(row_count)]
+            for index in selection:
+                row = index.row() - min(rows)
+                column = index.column() - min(columns)
+                table[row][column] = index.data()
+            stream = io.StringIO()
+            csv.writer(stream, delimiter="\t").writerows(table)
+            qApp.clipboard().setText(stream.getvalue())
